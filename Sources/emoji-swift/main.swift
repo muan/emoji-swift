@@ -1,4 +1,6 @@
 import Foundation
+import AppKit
+
 var endpoint = URL(string: "https://raw.githubusercontent.com/muan/emojilib/main/dist/emoji-en-US.json")!
 var fileContents = try String.init(contentsOf: endpoint).data(using: .utf8)!
 var decoder = JSONDecoder()
@@ -21,7 +23,25 @@ if keyword != "" {
     let matches = search(keyword: keyword)
     if matches.count > 0 {
         for (index, emoji) in matches.enumerated() {
-            print("\(index + 1). \(emoji)")
+            print("\(index). \(emoji)")
+        }
+
+        if matches.count == 1 {
+            print("wanna copy it? (Y/n)")
+            let decision = readLine() ?? "Y"
+            if decision == "" || decision == "Y" {
+                copy(emoji: matches[0])
+            } else {
+                print("ok")
+            }
+        } else {
+            print("which one?")
+            let choice = Int(readLine() ?? "") ?? -1
+            if choice > 0 && choice <= matches.count - 1 {
+                copy(emoji: matches[choice])
+            } else {
+                print("i don't know what this is. bye")
+            }
         }
     } else {
         print("no matches")
@@ -38,4 +58,12 @@ func search(keyword: String) -> [String] {
         }
     }
     return matches
+}
+
+
+func copy(emoji: String) {
+    let pasteboard = NSPasteboard.general
+    pasteboard.clearContents()
+    pasteboard.setString(emoji, forType: .string)
+    print("copied. have a good day")
 }
