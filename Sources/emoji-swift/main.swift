@@ -40,7 +40,7 @@ if keyword != "" {
             if choice > 0 && choice <= matches.count - 1 {
                 copy(emoji: matches[choice])
             } else {
-                print("i don't know what this is. bye")
+                print("i don't know what that is. bye")
             }
         }
     } else {
