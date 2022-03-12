@@ -1,21 +1,11 @@
 import Foundation
 import AppKit
 
-var endpoint = URL(string: "https://raw.githubusercontent.com/muan/emojilib/main/dist/emoji-en-US.json")!
-var fileContents = try String.init(contentsOf: endpoint).data(using: .utf8)!
-var decoder = JSONDecoder()
-var emojiLib = try decoder.decode(Dictionary<String, [String]>.self, from: fileContents)
-var reversedLib: Dictionary<String, [String]> = [:]
+let manager = FileManager()
+let decoder = JSONDecoder()
 
-for (key, stringArr) in emojiLib {
-    for word in stringArr {
-        if reversedLib.contains(where: { (key: String, value: [String]) -> Bool in key == word}) {
-            reversedLib[word] = reversedLib[word]! + [key]
-        } else {
-            reversedLib[word] = [key]
-        }
-    }
-}
+let fileContents = manager.contents(atPath: "./emoji.json")!
+let emojiLib = try decoder.decode(Dictionary<String, [String]>.self, from: fileContents)
 
 var keyword = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : ""
 
@@ -32,7 +22,7 @@ if keyword != "" {
             if decision == "" || decision == "Y" {
                 copy(emoji: matches[0])
             } else {
-                print("ok")
+                print("bye")
             }
         } else {
             print("which one?")
@@ -52,7 +42,7 @@ if keyword != "" {
 
 func search(keyword: String) -> [String] {
     var matches: [String] = []
-    for (key, value) in reversedLib {
+    for (key, value) in emojiLib {
         if key.contains(keyword) {
             matches = matches + value
         }
