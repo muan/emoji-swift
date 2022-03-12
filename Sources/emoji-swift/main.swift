@@ -10,8 +10,8 @@ let emojiLib = try decoder.decode(Dictionary<String, [String]>.self, from: fileC
 var keyword = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : ""
 
 if keyword != "" {
-    let matches = Array(Set(search(keyword: keyword)))
-    if matches.count > 0 {
+    let matches = Set(search(keyword: keyword)).sorted()
+    if !matches.isEmpty {
         for (index, emoji) in matches.enumerated() {
             print("\(index). \(emoji)")
         }
@@ -27,7 +27,7 @@ if keyword != "" {
         } else {
             print("which one?")
             let choice = Int(readLine() ?? "") ?? -1
-            if choice > 0 && choice <= matches.count - 1 {
+            if matches.indices.contains(choice) {
                 copy(emoji: matches[choice])
             } else {
                 print("i don't know what that is. bye")
