@@ -10,7 +10,7 @@ let emojiLib = try decoder.decode(Dictionary<String, [String]>.self, from: fileC
 var keyword = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : ""
 
 if keyword != "" {
-    let matches = search(keyword: keyword)
+    let matches = Array(Set(search(keyword: keyword)))
     if matches.count > 0 {
         for (index, emoji) in matches.enumerated() {
             print("\(index). \(emoji)")
